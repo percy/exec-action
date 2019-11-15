@@ -15,5 +15,8 @@
   "devDependencies": {
     "@percy/script": "^1.0.2",
     "@zeit/ncc": "^0.20.5"
+  },
+  "resolutions": {
+    "percy-client": "3.3.0"
   }
 }
