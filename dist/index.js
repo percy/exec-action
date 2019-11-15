@@ -8147,6 +8147,8 @@ const exec = __webpack_require__(986);
 const io = __webpack_require__(1);
 const pkg = __webpack_require__(731);
 
+const ACTION_UA = `${pkg.name}/${pkg.version}`;
+
 // Sets the required env info for Percy to work correctly
 function setPercyBranchBuildInfo(pullRequestNumber) {
   if (!!pullRequestNumber) {
@@ -8166,10 +8168,9 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
     let isDebug = core.getInput('verbose') === 'true';
     let isSilenced = core.getInput('silence') === 'true';
     let pullRequestNumber = github.context.payload.number;
-    let actionUserAgent = `${pkg.name}/${pkg.version}`;
 
     // Set the CI builds user agent
-    core.exportVariable('PERCY_GITHUB_ACTION', actionUserAgent);
+    core.exportVariable('PERCY_GITHUB_ACTION', ACTION_UA);
 
     if (isSilenced) {
       core.exportVariable('LOG_LEVEL', 'silence');
@@ -8179,6 +8180,7 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
       core.exportVariable('LOG_LEVEL', 'debug');
     }
 
+    // Set the PR # (if available) and branch name
     setPercyBranchBuildInfo(pullRequestNumber);
 
     if (testCommand) {
@@ -8895,7 +8897,7 @@ module.exports = {"activity":{"checkStarringRepo":{"method":"GET","params":{"own
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"exec-action","version":"0.1.0","description":"A GitHub action to run `percy exec` CLI commands","main":"dist/index.js","repository":"https://github.com/percy/exec-action","keywords":["github action","percy","visual testing"],"author":"Perceptual Inc.","license":"MIT","scripts":{"build":"ncc build src/index.js","percy":"percy exec -- node ./tests/script.js","precommit":"yarn build && git add dist/index.js"},"dependencies":{"@actions/core":"^1.2.0","@actions/github":"^1.1.0","@percy/agent":"^0.19.5","@actions/exec":"^1.0.1","@actions/io":"^1.0.1"},"devDependencies":{"@percy/script":"^1.0.2","@zeit/ncc":"^0.20.5"}};
+module.exports = {"name":"exec","version":"0.1.0","description":"A GitHub action to run `percy exec` CLI commands","main":"dist/index.js","repository":"https://github.com/percy/exec-action","keywords":["GitHub action","Percy","visual testing"],"author":"Perceptual Inc.","license":"MIT","scripts":{"build":"ncc build src/index.js","percy":"percy exec -- node ./tests/script.js","precommit":"yarn build && git add dist/index.js"},"dependencies":{"@actions/core":"^1.2.0","@actions/github":"^1.1.0","@percy/agent":"^0.19.5","@actions/exec":"^1.0.1","@actions/io":"^1.0.1"},"devDependencies":{"@percy/script":"^1.0.2","@zeit/ncc":"^0.20.5"}};
 
 /***/ }),
 
