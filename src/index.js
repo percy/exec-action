@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const exec = require('@actions/exec');
 const io = require('@actions/io');
-const pkg = require('exec-action/package.json');
+const pkg = require('../package.json');
 
 // Sets the required env info for Percy to work correctly
 function setPercyBranchBuildInfo(pullRequestNumber) {

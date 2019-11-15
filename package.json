@@ -12,7 +12,7 @@
   "author": "Perceptual Inc.",
   "license": "MIT",
   "scripts": {
-    "build": "ncc build index.js",
+    "build": "ncc build src/index.js",
     "percy": "percy exec -- node ./tests/script.js",
     "precommit": "yarn build && git add dist/index.js"
   },
