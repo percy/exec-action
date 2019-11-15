@@ -6,9 +6,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
-      - name: Install
+      - name: Install dependencies
         run: yarn
-      - name: Percy Test
+      - name: Default test
         uses: ./
         with:
           command: "node ./tests/script.js"
