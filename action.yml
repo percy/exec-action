@@ -1,0 +1,23 @@
+# action.yml
+name: "Percy"
+description: "A GitHub Action for running visual tests with Percy"
+inputs:
+  command:  # id of input
+    description: 'Your test suites CLI command'
+    default: ''
+    required: true
+  exec-flags:
+    description: 'Flags to pass to the `percy exec` command'
+    default: ''
+  silence:
+    description: 'Silence logging'
+    default: false
+  verbose:
+    description: 'Enable verbose logging'
+    default: false
+# outputs:
+#   time: # id of output
+#     description: 'The time we greeted you'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

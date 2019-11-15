@@ -1,0 +1,19 @@
+{
+  "scripts": {
+    "build": "ncc build index.js",
+    "percy": "percy exec -- node ./tests/script.js",
+    "precommit": "yarn build && git add dist/index.js"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.0",
+    "@actions/github": "^1.1.0",
+    "@percy/agent": "^0.19.5",
+    "@actions/exec": "^1.0.1",
+    "@actions/io": "^1.0.1",
+    "cross-spawn": "^7.0.1"
+  },
+  "devDependencies": {
+    "@percy/script": "^1.0.2",
+    "@zeit/ncc": "^0.20.5"
+  }
+}
