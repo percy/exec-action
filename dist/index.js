@@ -34,7 +34,7 @@ module.exports =
 /******/ 	// the startup function
 /******/ 	function startup() {
 /******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(104);
+/******/ 		return __webpack_require__(676);
 /******/ 	};
 /******/
 /******/ 	// run startup
@@ -945,70 +945,6 @@ function whichSync (cmd, opt) {
 /***/ (function(module) {
 
 module.exports = require("os");
-
-/***/ }),
-
-/***/ 104:
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
-
-const core = __webpack_require__(470);
-const github = __webpack_require__(469);
-const exec = __webpack_require__(986);
-const io = __webpack_require__(1);
-const pkg = __webpack_require__(731);
-
-// Sets the required env info for Percy to work correctly
-function setPercyBranchBuildInfo(pullRequestNumber) {
-  if (!!pullRequestNumber) {
-    let prBranch = github.context.payload.pull_request.head.ref;
-
-    core.exportVariable('PERCY_BRANCH', prBranch);
-    core.exportVariable('PERCY_PULL_REQUEST', pullRequestNumber);
-  } else {
-    core.exportVariable('PERCY_BRANCH', github.context.payload.ref.replace('refs/heads/', ''));
-  }
-}
-// Ideas/TODOs:
-// - Create enable/disable commit message flag
-// - Check for chrome path and automatically skip puppeteer download
-// - Check for already set env vars
-// - Figure out how to write tess
-// - Parallel builds?
-(async () => {
-  try {
-    let flags = core.getInput('exec-flags');
-    let testCommand = core.getInput('command');
-    let isDebug = core.getInput('verbose') === 'true';
-    let isSilenced = core.getInput('silence') === 'true';
-    let pullRequestNumber = github.context.payload.number;
-    let actionUserAgent = `${pkg.name}/${pkg.version}`;
-
-    // Set the CI builds user agent
-    core.exportVariable('PERCY_GITHUB_ACTION', actionUserAgent);
-
-    if (isSilenced) {
-      core.exportVariable('LOG_LEVEL', 'silence');
-    }
-
-    if (isDebug) {
-      core.exportVariable('LOG_LEVEL', 'debug');
-    }
-
-    setPercyBranchBuildInfo(pullRequestNumber);
-
-    if (testCommand) {
-      let npxPath = await io.which('npx', true);
-
-      // Run the passed command with `percy exec` to create a Percy build
-      await exec.exec(`"${npxPath}" percy exec ${flags} -- ${testCommand}`);
-
-      return;
-    }
-  } catch (error) {
-    core.setFailed(error.message);
-  }
-})();
-
 
 /***/ }),
 
@@ -8202,6 +8138,67 @@ module.exports = function btoa(str) {
 
 /***/ }),
 
+/***/ 676:
+/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+
+const core = __webpack_require__(470);
+const github = __webpack_require__(469);
+const exec = __webpack_require__(986);
+const io = __webpack_require__(1);
+const pkg = __webpack_require__(731);
+
+const ACTION_UA = `${pkg.name}/${pkg.version}`;
+
+// Sets the required env info for Percy to work correctly
+function setPercyBranchBuildInfo(pullRequestNumber) {
+  if (!!pullRequestNumber) {
+    let prBranch = github.context.payload.pull_request.head.ref;
+
+    core.exportVariable('PERCY_BRANCH', prBranch);
+    core.exportVariable('PERCY_PULL_REQUEST', pullRequestNumber);
+  } else {
+    core.exportVariable('PERCY_BRANCH', github.context.payload.ref.replace('refs/heads/', ''));
+  }
+}
+
+(async () => {
+  try {
+    let flags = core.getInput('exec-flags');
+    let testCommand = core.getInput('command');
+    let isDebug = core.getInput('verbose') === 'true';
+    let isSilenced = core.getInput('silence') === 'true';
+    let pullRequestNumber = github.context.payload.number;
+
+    // Set the CI builds user agent
+    core.exportVariable('PERCY_GITHUB_ACTION', ACTION_UA);
+
+    if (isSilenced) {
+      core.exportVariable('LOG_LEVEL', 'silence');
+    }
+
+    if (isDebug) {
+      core.exportVariable('LOG_LEVEL', 'debug');
+    }
+
+    // Set the PR # (if available) and branch name
+    setPercyBranchBuildInfo(pullRequestNumber);
+
+    if (testCommand) {
+      let npxPath = await io.which('npx', true);
+
+      // Run the passed command with `percy exec` to create a Percy build
+      await exec.exec(`"${npxPath}" percy exec ${flags} -- ${testCommand}`);
+
+      return;
+    }
+  } catch (error) {
+    core.setFailed(error.message);
+  }
+})();
+
+
+/***/ }),
+
 /***/ 686:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -8900,7 +8897,7 @@ module.exports = {"activity":{"checkStarringRepo":{"method":"GET","params":{"own
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"scripts":{"build":"ncc build index.js","percy":"percy exec -- node ./tests/script.js","precommit":"yarn build && git add dist/index.js"},"dependencies":{"@actions/core":"^1.2.0","@actions/github":"^1.1.0","@percy/agent":"^0.19.5","@actions/exec":"^1.0.1","@actions/io":"^1.0.1","cross-spawn":"^7.0.1"},"devDependencies":{"@percy/script":"^1.0.2","@zeit/ncc":"^0.20.5"}};
+module.exports = {"name":"exec","version":"0.1.0","description":"A GitHub action to run `percy exec` CLI commands","main":"dist/index.js","repository":"https://github.com/percy/exec-action","keywords":["GitHub action","Percy","visual testing"],"author":"Perceptual Inc.","license":"MIT","scripts":{"build":"ncc build src/index.js","percy":"percy exec -- node ./tests/script.js","precommit":"yarn build && git add dist/index.js"},"dependencies":{"@actions/core":"^1.2.0","@actions/github":"^1.1.0","@percy/agent":"^0.19.5","@actions/exec":"^1.0.1","@actions/io":"^1.0.1"},"devDependencies":{"@percy/script":"^1.0.2","@zeit/ncc":"^0.20.5"}};
 
 /***/ }),
 

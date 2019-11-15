@@ -2,7 +2,9 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const exec = require('@actions/exec');
 const io = require('@actions/io');
-const pkg = require('./package.json');
+const pkg = require('../package.json');
+
+const ACTION_UA = `${pkg.name}/${pkg.version}`;
 
 // Sets the required env info for Percy to work correctly
 function setPercyBranchBuildInfo(pullRequestNumber) {
@@ -23,10 +25,9 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
     let isDebug = core.getInput('verbose') === 'true';
     let isSilenced = core.getInput('silence') === 'true';
     let pullRequestNumber = github.context.payload.number;
-    let actionUserAgent = `${pkg.name}/${pkg.version}`;
 
     // Set the CI builds user agent
-    core.exportVariable('PERCY_GITHUB_ACTION', actionUserAgent);
+    core.exportVariable('PERCY_GITHUB_ACTION', ACTION_UA);
 
     if (isSilenced) {
       core.exportVariable('LOG_LEVEL', 'silence');
@@ -36,6 +37,7 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
       core.exportVariable('LOG_LEVEL', 'debug');
     }
 
+    // Set the PR # (if available) and branch name
     setPercyBranchBuildInfo(pullRequestNumber);
 
     if (testCommand) {

@@ -1,6 +1,9 @@
 # action.yml
-name: "Percy"
+name: "exec-action"
 description: "A GitHub Action for running visual tests with Percy"
+branding:
+  icon: 'camera'
+  color: 'purple'
 inputs:
   command:  # id of input
     description: 'Your test suites CLI command'
