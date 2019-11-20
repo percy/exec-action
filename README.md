@@ -1,6 +1,7 @@
 # Percy exec GitHub Action
 
-A GitHub action to run `percy exec` CLI commands.
+A GitHub action to run `percy exec` CLI commands. [Full API docs for this action
+can be found here](https://docs.percy.io/docs/github-actions#section-exec-action)
 
 ## Quick start
 
