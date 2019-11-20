@@ -12,6 +12,9 @@ inputs:
   exec-flags:
     description: 'Flags to pass to the `percy exec` command'
     default: ''
+  working-directory:
+    description: 'The directory for the commands to execute in'
+    default: './'
   silence:
     description: 'Silence logging'
     default: false
