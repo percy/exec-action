@@ -24,7 +24,9 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
     let testCommand = core.getInput('command');
     let isDebug = core.getInput('verbose') === 'true';
     let isSilenced = core.getInput('silence') === 'true';
+    let workingDir = core.getInput('working-directory');
     let pullRequestNumber = github.context.payload.number;
+    let execOptions = { cwd: workingDir };
 
     // Set the CI builds user agent
     core.exportVariable('PERCY_GITHUB_ACTION', ACTION_UA);
@@ -44,7 +46,7 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
       let npxPath = await io.which('npx', true);
 
       // Run the passed command with `percy exec` to create a Percy build
-      await exec.exec(`"${npxPath}" percy exec ${flags} -- ${testCommand}`);
+      await exec.exec(`"${npxPath}" percy exec ${flags} -- ${testCommand}`, [], execOptions);
 
       return;
     }
