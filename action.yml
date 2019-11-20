@@ -1,6 +1,6 @@
 # action.yml
 name: "exec-action"
-description: "A GitHub Action for running visual tests with Percy"
+description: "A GitHub action to run `percy exec` CLI commands"
 branding:
   icon: 'camera'
   color: 'purple'
