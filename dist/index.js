@@ -8156,6 +8156,9 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
     let workingDir = core.getInput('working-directory');
     let pullRequestNumber = github.context.payload.number;
     let execOptions = { cwd: workingDir };
+    console.log('What do we have here 3?', JSON.stringify(github.context, undefined, 2));
+    let nonce = `${github.context.sha}-${github.context.ref}-${github.context.actor}-${github.context.eventName}-${github.context.workflow}`;
+    console.log('nonce = ', nonce);
 
     // Set the CI builds user agent
     core.exportVariable('PERCY_GITHUB_ACTION', ACTION_UA);
