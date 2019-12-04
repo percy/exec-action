@@ -1,6 +1,6 @@
 # Percy exec GitHub Action
 
-A GitHub action to run `percy exec` CLI commands. [Full API docs for this action
+A GitHub action to run `percy exec` CLI commands for visual testing. [Full API docs for this action
 can be found here](https://docs.percy.io/docs/github-actions#section-exec-action)
 
 ## Quick start
@@ -24,7 +24,7 @@ jobs:
       - name: Install
         run: yarn
       - name: Percy Test
-        uses: percy/exec-action@0.1.0
+        uses: percy/exec-action@v0.1.1
         with:
           command: "cypress run"
         env:
