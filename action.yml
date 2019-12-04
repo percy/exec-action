@@ -1,11 +1,10 @@
-# action.yml
 name: "Percy Exec"
-description: "A GitHub action to run `percy exec` CLI commands"
+description: "A GitHub action to run `percy exec` CLI commands for visual testing"
 branding:
   icon: 'camera'
   color: 'purple'
 inputs:
-  command:  # id of input
+  command:
     description: 'Your test suites CLI command'
     default: ''
     required: true
@@ -21,9 +20,6 @@ inputs:
   verbose:
     description: 'Enable verbose logging'
     default: false
-# outputs:
-#   time: # id of output
-#     description: 'The time we greeted you'
 runs:
   using: 'node12'
   main: 'dist/index.js'
