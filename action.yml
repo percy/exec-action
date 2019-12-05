@@ -1,4 +1,4 @@
-name: "Percy Exec"
+name: "Percy"
 description: "A GitHub action to run `percy exec` CLI commands for visual testing"
 branding:
   icon: 'camera'
