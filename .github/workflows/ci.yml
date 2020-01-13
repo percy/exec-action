@@ -1,9 +1,5 @@
 name: CI
-# on: [push, pull_request]
-on:
-  schedule:
-    # run every 5 min, for testing
-    - cron:  '*/5 * * * *'
+on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
