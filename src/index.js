@@ -8,7 +8,7 @@ const ACTION_UA = `${pkg.name}/${pkg.version}`;
 
 // Sets the required env info for Percy to work correctly
 function setPercyBranchBuildInfo(pullRequestNumber) {
-  if (!github.context.payload) {
+  if (!!github.context.payload) {
     return;
   }
 
