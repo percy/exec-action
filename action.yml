@@ -8,6 +8,9 @@ inputs:
     description: 'Your test suites CLI command'
     default: ''
     required: true
+  custom-command:
+    description: 'Run your own shell command'
+    default: ''
   exec-flags:
     description: 'Flags to pass to the `percy exec` command'
     default: ''
