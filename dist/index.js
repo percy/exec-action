@@ -8155,6 +8155,7 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
   try {
     let flags = core.getInput('exec-flags');
     let testCommand = core.getInput('command');
+    let customCommand = core.getInput('custom-command');
     let isDebug = core.getInput('verbose') === 'true';
     let isSilenced = core.getInput('silence') === 'true';
     let workingDir = core.getInput('working-directory');
@@ -8175,7 +8176,12 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
     // Set the PR # (if available) and branch name
     setPercyBranchBuildInfo(pullRequestNumber);
 
-    if (testCommand) {
+    if (customCommand) {
+      // Run the passed command
+      await exec.exec(`${customCommand}`, [], execOptions);
+
+      return;
+    } else {
       let npxPath = await io.which('npx', true);
 
       // Run the passed command with `percy exec` to create a Percy build
@@ -8209,6 +8215,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const os = __webpack_require__(87);
 const events = __webpack_require__(614);
 const child = __webpack_require__(129);
+const path = __webpack_require__(622);
+const io = __webpack_require__(1);
+const ioUtil = __webpack_require__(672);
 /* eslint-disable @typescript-eslint/unbound-method */
 const IS_WINDOWS = process.platform === 'win32';
 /*
@@ -8554,6 +8563,16 @@ class ToolRunner extends events.EventEmitter {
      */
     exec() {
         return __awaiter(this, void 0, void 0, function* () {
+            // root the tool path if it is unrooted and contains relative pathing
+            if (!ioUtil.isRooted(this.toolPath) &&
+                (this.toolPath.includes('/') ||
+                    (IS_WINDOWS && this.toolPath.includes('\\')))) {
+                // prefer options.cwd if it is specified, however options.cwd may also need to be rooted
+                this.toolPath = path.resolve(process.cwd(), this.options.cwd || process.cwd(), this.toolPath);
+            }
+            // if the tool is only a file name, then resolve it from the PATH
+            // otherwise verify it exists (add extension on Windows if necessary)
+            this.toolPath = yield io.which(this.toolPath, true);
             return new Promise((resolve, reject) => {
                 this._debug(`exec tool: ${this.toolPath}`);
                 this._debug('arguments:');
@@ -8889,7 +8908,7 @@ module.exports = {"activity":{"checkStarringRepo":{"method":"GET","params":{"own
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"exec","version":"0.1.2","description":"A GitHub action to run `percy exec` CLI commands for visual testing","main":"dist/index.js","repository":"https://github.com/percy/exec-action","keywords":["GitHub action","Percy","visual testing"],"author":"Perceptual Inc.","license":"MIT","scripts":{"build":"ncc build src/index.js","percy":"percy exec -- node ./tests/script.js","precommit":"yarn build && git add dist/index.js"},"dependencies":{"@actions/core":"^1.2.0","@actions/github":"^1.1.0","@percy/agent":"^0.19.5","@actions/exec":"^1.0.1","@actions/io":"^1.0.1"},"devDependencies":{"@percy/script":"^1.0.2","@zeit/ncc":"^0.20.5"}};
+module.exports = {"name":"exec","version":"0.1.3","description":"A GitHub action to run `percy exec` CLI commands for visual testing","main":"dist/index.js","repository":"https://github.com/percy/exec-action","keywords":["GitHub action","Percy","visual testing"],"author":"Perceptual Inc.","license":"MIT","scripts":{"build":"ncc build src/index.js","percy":"percy exec -- node ./tests/script.js","precommit":"yarn build && git add dist/index.js"},"dependencies":{"@actions/core":"^1.2.0","@actions/github":"^1.1.0","@percy/agent":"^0.19.5","@actions/exec":"^1.0.3","@actions/io":"^1.0.2"},"devDependencies":{"@percy/script":"^1.0.2","@zeit/ncc":"^0.20.5"}};
 
 /***/ }),
 

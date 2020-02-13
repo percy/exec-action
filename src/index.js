@@ -26,6 +26,7 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
   try {
     let flags = core.getInput('exec-flags');
     let testCommand = core.getInput('command');
+    let customCommand = core.getInput('custom-command');
     let isDebug = core.getInput('verbose') === 'true';
     let isSilenced = core.getInput('silence') === 'true';
     let workingDir = core.getInput('working-directory');
@@ -46,7 +47,12 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
     // Set the PR # (if available) and branch name
     setPercyBranchBuildInfo(pullRequestNumber);
 
-    if (testCommand) {
+    if (customCommand) {
+      // Run the passed command
+      await exec.exec(`${customCommand}`, [], execOptions);
+
+      return;
+    } else {
       let npxPath = await io.which('npx', true);
 
       // Run the passed command with `percy exec` to create a Percy build
