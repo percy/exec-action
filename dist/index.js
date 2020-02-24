@@ -8136,18 +8136,16 @@ const pkg = __webpack_require__(731);
 const ACTION_UA = `${pkg.name}/${pkg.version}`;
 
 // Sets the required env info for Percy to work correctly
-function setPercyBranchBuildInfo(pullRequestNumber) {
-  if (!!github.context.payload) {
-    return;
-  }
-
+function setPercyBranchBuildInfo(pullRequestNumber, isDebug) {
   if (!!pullRequestNumber) {
     let prBranch = github.context.payload.pull_request.head.ref;
 
     core.exportVariable('PERCY_BRANCH', prBranch);
     core.exportVariable('PERCY_PULL_REQUEST', pullRequestNumber);
-  } else {
+  } else if (github.context.payload.ref) {
     core.exportVariable('PERCY_BRANCH', github.context.payload.ref.replace('refs/heads/', ''));
+  } else if (isDebug) {
+    console.log('Could not set `PERCY_BRANCH`');
   }
 }
 
@@ -8157,6 +8155,7 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
     let testCommand = core.getInput('command');
     let customCommand = core.getInput('custom-command');
     let isDebug = core.getInput('verbose') === 'true';
+    let isPassthough = core.getInput('passthrough') === 'true';
     let isSilenced = core.getInput('silence') === 'true';
     let workingDir = core.getInput('working-directory');
     let pullRequestNumber = github.context.payload.number;
@@ -8174,7 +8173,11 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
     }
 
     // Set the PR # (if available) and branch name
-    setPercyBranchBuildInfo(pullRequestNumber);
+    setPercyBranchBuildInfo(pullRequestNumber, isDebug);
+
+    // Passthrough actions just set env vars,
+    // running percy is done later in the workflow
+    if (isPassthough) return;
 
     if (customCommand) {
       // Run the passed command
@@ -8908,7 +8911,7 @@ module.exports = {"activity":{"checkStarringRepo":{"method":"GET","params":{"own
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"exec","version":"0.1.3","description":"A GitHub action to run `percy exec` CLI commands for visual testing","main":"dist/index.js","repository":"https://github.com/percy/exec-action","keywords":["GitHub action","Percy","visual testing"],"author":"Perceptual Inc.","license":"MIT","scripts":{"build":"ncc build src/index.js","percy":"percy exec -- node ./tests/script.js","precommit":"yarn build && git add dist/index.js"},"dependencies":{"@actions/core":"^1.2.0","@actions/github":"^1.1.0","@percy/agent":"^0.19.5","@actions/exec":"^1.0.3","@actions/io":"^1.0.2"},"devDependencies":{"@percy/script":"^1.0.2","@zeit/ncc":"^0.20.5"}};
+module.exports = {"name":"exec","version":"0.3.0","description":"A GitHub action to run `percy exec` CLI commands for visual testing","main":"dist/index.js","repository":"https://github.com/percy/exec-action","keywords":["GitHub action","Percy","visual testing"],"author":"Perceptual Inc.","license":"MIT","scripts":{"build":"ncc build src/index.js","percy":"percy exec -- node ./tests/script.js","precommit":"yarn build && git add dist/index.js"},"dependencies":{"@actions/core":"^1.2.0","@actions/github":"^1.1.0","@percy/agent":"^0.19.5","@actions/exec":"^1.0.3","@actions/io":"^1.0.2"},"devDependencies":{"@percy/script":"^1.0.2","@zeit/ncc":"^0.20.5"}};
 
 /***/ }),
 

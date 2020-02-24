@@ -7,18 +7,16 @@ const pkg = require('../package.json');
 const ACTION_UA = `${pkg.name}/${pkg.version}`;
 
 // Sets the required env info for Percy to work correctly
-function setPercyBranchBuildInfo(pullRequestNumber) {
-  if (!!github.context.payload) {
-    return;
-  }
-
+function setPercyBranchBuildInfo(pullRequestNumber, isDebug) {
   if (!!pullRequestNumber) {
     let prBranch = github.context.payload.pull_request.head.ref;
 
     core.exportVariable('PERCY_BRANCH', prBranch);
     core.exportVariable('PERCY_PULL_REQUEST', pullRequestNumber);
-  } else {
+  } else if (github.context.payload.ref) {
     core.exportVariable('PERCY_BRANCH', github.context.payload.ref.replace('refs/heads/', ''));
+  } else if (isDebug) {
+    console.log('Could not set `PERCY_BRANCH`');
   }
 }
 
@@ -28,6 +26,7 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
     let testCommand = core.getInput('command');
     let customCommand = core.getInput('custom-command');
     let isDebug = core.getInput('verbose') === 'true';
+    let isPassthough = core.getInput('passthrough') === 'true';
     let isSilenced = core.getInput('silence') === 'true';
     let workingDir = core.getInput('working-directory');
     let pullRequestNumber = github.context.payload.number;
@@ -45,7 +44,11 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
     }
 
     // Set the PR # (if available) and branch name
-    setPercyBranchBuildInfo(pullRequestNumber);
+    setPercyBranchBuildInfo(pullRequestNumber, isDebug);
+
+    // Passthrough actions just set env vars,
+    // running percy is done later in the workflow
+    if (isPassthough) return;
 
     if (customCommand) {
       // Run the passed command

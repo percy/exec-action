@@ -1,5 +1,5 @@
-name: CI
-on: [push, pull_request]
+name: PR Test
+on: pull_request
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -8,7 +8,7 @@ jobs:
         uses: actions/checkout@master
       - name: Install dependencies
         run: yarn
-      - name: Default test
+      - name: Percy test
         uses: ./
         with:
           command: "node ./tests/script.js"

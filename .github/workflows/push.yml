@@ -1,0 +1,38 @@
+name: Tests
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Install dependencies
+        run: yarn
+      - name: Passthrough test
+        uses: ./
+        with:
+          passthrough: true
+      - name: Env test
+        run: |
+          node ./tests/env-test.js LOG_LEVEL
+          node ./tests/env-test.js PERCY_BRANCH $(git rev-parse --abbrev-ref HEAD)
+      - name: Percy test
+        uses: ./
+        with:
+          command: "node ./tests/script.js"
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+      - name: Set debug env
+        uses: ./
+        with:
+          passthrough: true
+          verbose: true
+      - name: Debug env test
+        run: node ./tests/env-test.js LOG_LEVEL debug
+      - name: Set silence env
+        uses: ./
+        with:
+          passthrough: true
+          silence: true
+      - name: Debug env test
+        run: node ./tests/env-test.js LOG_LEVEL silence
