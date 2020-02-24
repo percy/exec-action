@@ -8135,6 +8135,20 @@ const pkg = __webpack_require__(731);
 
 const ACTION_UA = `${pkg.name}/${pkg.version}`;
 
+// Sets the required env info for Percy to work correctly
+function setPercyBranchBuildInfo(pullRequestNumber, isDebug) {
+  if (!!pullRequestNumber) {
+    let prBranch = github.context.payload.pull_request.head.ref;
+
+    core.exportVariable('PERCY_BRANCH', prBranch);
+    core.exportVariable('PERCY_PULL_REQUEST', pullRequestNumber);
+  } else if (github.context.payload.ref) {
+    core.exportVariable('PERCY_BRANCH', github.context.payload.ref.replace('refs/heads/', ''));
+  } else if (isDebug) {
+    console.log('Could not set `PERCY_BRANCH`');
+  }
+}
+
 (async () => {
   try {
     let flags = core.getInput('exec-flags');
@@ -8146,20 +8160,6 @@ const ACTION_UA = `${pkg.name}/${pkg.version}`;
     let workingDir = core.getInput('working-directory');
     let pullRequestNumber = github.context.payload.number;
     let execOptions = { cwd: workingDir };
-
-    // Sets the required env info for Percy to work correctly
-    function setPercyBranchBuildInfo() {
-      if (!!pullRequestNumber) {
-        let prBranch = github.context.payload.pull_request.head.ref;
-
-        core.exportVariable('PERCY_BRANCH', prBranch);
-        core.exportVariable('PERCY_PULL_REQUEST', pullRequestNumber);
-      } else if (github.context.payload.ref) {
-        core.exportVariable('PERCY_BRANCH', github.context.payload.ref.replace('refs/heads/', ''));
-      } else {
-        if (isDebug) console.log('Could not set `PERCY_BRANCH`');
-      }
-    }
 
     // Set the CI builds user agent
     core.exportVariable('PERCY_GITHUB_ACTION', ACTION_UA);
@@ -8173,7 +8173,7 @@ const ACTION_UA = `${pkg.name}/${pkg.version}`;
     }
 
     // Set the PR # (if available) and branch name
-    setPercyBranchBuildInfo(pullRequestNumber);
+    setPercyBranchBuildInfo(pullRequestNumber, isDebug);
 
     // Passthrough actions just set env vars,
     // running percy is done later in the workflow
