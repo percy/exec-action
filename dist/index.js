@@ -8135,22 +8135,6 @@ const pkg = __webpack_require__(731);
 
 const ACTION_UA = `${pkg.name}/${pkg.version}`;
 
-// Sets the required env info for Percy to work correctly
-function setPercyBranchBuildInfo(pullRequestNumber) {
-  if (!!github.context.payload) {
-    return;
-  }
-
-  if (!!pullRequestNumber) {
-    let prBranch = github.context.payload.pull_request.head.ref;
-
-    core.exportVariable('PERCY_BRANCH', prBranch);
-    core.exportVariable('PERCY_PULL_REQUEST', pullRequestNumber);
-  } else {
-    core.exportVariable('PERCY_BRANCH', github.context.payload.ref.replace('refs/heads/', ''));
-  }
-}
-
 (async () => {
   try {
     let flags = core.getInput('exec-flags');
@@ -8162,6 +8146,20 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
     let workingDir = core.getInput('working-directory');
     let pullRequestNumber = github.context.payload.number;
     let execOptions = { cwd: workingDir };
+
+    // Sets the required env info for Percy to work correctly
+    function setPercyBranchBuildInfo() {
+      if (!!pullRequestNumber) {
+        let prBranch = github.context.payload.pull_request.head.ref;
+
+        core.exportVariable('PERCY_BRANCH', prBranch);
+        core.exportVariable('PERCY_PULL_REQUEST', pullRequestNumber);
+      } else if (github.context.payload.ref) {
+        core.exportVariable('PERCY_BRANCH', github.context.payload.ref.replace('refs/heads/', ''));
+      } else {
+        if (isDebug) console.log('Could not set `PERCY_BRANCH`');
+      }
+    }
 
     // Set the CI builds user agent
     core.exportVariable('PERCY_GITHUB_ACTION', ACTION_UA);
