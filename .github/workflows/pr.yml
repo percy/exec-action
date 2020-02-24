@@ -1,0 +1,16 @@
+name: PR Test
+on: pull_request
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Install dependencies
+        run: yarn
+      - name: Percy test
+        uses: ./
+        with:
+          command: "node ./tests/script.js"
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}

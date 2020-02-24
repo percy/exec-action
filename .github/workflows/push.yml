@@ -1,5 +1,5 @@
 name: Tests
-on: [push, pull_request]
+on: push
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,7 +16,7 @@ jobs:
         run: |
           node ./tests/env-test.js LOG_LEVEL
           node ./tests/env-test.js PERCY_BRANCH $(git rev-parse --abbrev-ref HEAD)
-      - name: Default test
+      - name: Percy test
         uses: ./
         with:
           command: "node ./tests/script.js"
