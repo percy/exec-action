@@ -28,6 +28,7 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
     let testCommand = core.getInput('command');
     let customCommand = core.getInput('custom-command');
     let isDebug = core.getInput('verbose') === 'true';
+    let isPassthough = core.getInput('passthrough') === 'true';
     let isSilenced = core.getInput('silence') === 'true';
     let workingDir = core.getInput('working-directory');
     let pullRequestNumber = github.context.payload.number;
@@ -46,6 +47,10 @@ function setPercyBranchBuildInfo(pullRequestNumber) {
 
     // Set the PR # (if available) and branch name
     setPercyBranchBuildInfo(pullRequestNumber);
+
+    // Passthrough actions just set env vars,
+    // running percy is done later in the workflow
+    if (isPassthough) return;
 
     if (customCommand) {
       // Run the passed command
