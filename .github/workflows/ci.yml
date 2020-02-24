@@ -1,4 +1,4 @@
-name: CI
+name: Tests
 on: [push, pull_request]
 jobs:
   build:
@@ -14,8 +14,8 @@ jobs:
           passthrough: true
       - name: Env test
         run: |
-          node env-test.js LOG_LEVEL undefined
-          node env-test.js PERCY_BRANCH $(git rev-parse --abbrev-ref HEAD)
+          node ./tests/env-test.js LOG_LEVEL
+          node ./tests/env-test.js PERCY_BRANCH $(git rev-parse --abbrev-ref HEAD)
       - name: Default test
         uses: ./
         with:
@@ -28,11 +28,11 @@ jobs:
           passthrough: true
           verbose: true
       - name: Debug env test
-        run: node env-test.js LOG_LEVEL debug
+        run: node ./tests/env-test.js LOG_LEVEL debug
       - name: Set silence env
         uses: ./
         with:
           passthrough: true
           silence: true
       - name: Debug env test
-        run: node env-test.js LOG_LEVEL silence
+        run: node ./tests/env-test.js LOG_LEVEL silence
