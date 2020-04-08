@@ -18,10 +18,11 @@
   },
   "dependencies": {
     "@actions/core": "^1.2.0",
-    "@actions/github": "^1.1.0",
-    "@percy/agent": "^0.19.5",
     "@actions/exec": "^1.0.3",
-    "@actions/io": "^1.0.2"
+    "@actions/github": "^1.1.0",
+    "@actions/io": "^1.0.2",
+    "@percy/agent": "^0.19.5",
+    "minimist": "^1.2.5"
   },
   "devDependencies": {
     "@percy/script": "^1.0.2",
