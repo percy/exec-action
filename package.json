@@ -1,6 +1,6 @@
 {
   "name": "exec",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A GitHub action to run `percy exec` CLI commands for visual testing",
   "main": "dist/index.js",
   "repository": "https://github.com/percy/exec-action",

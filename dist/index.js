@@ -9036,7 +9036,7 @@ module.exports = {"activity":{"checkStarringRepo":{"method":"GET","params":{"own
 /***/ 731:
 /***/ (function(module) {
 
-module.exports = {"name":"exec","version":"0.3.0","description":"A GitHub action to run `percy exec` CLI commands for visual testing","main":"dist/index.js","repository":"https://github.com/percy/exec-action","keywords":["GitHub action","Percy","visual testing"],"author":"Perceptual Inc.","license":"MIT","scripts":{"build":"ncc build src/index.js","percy":"percy exec -- node ./tests/script.js","precommit":"yarn build && git add dist/index.js"},"dependencies":{"@actions/core":"^1.2.6","@actions/exec":"^1.0.3","@actions/github":"^1.1.0","@actions/io":"^1.0.2","@percy/agent":"^0.19.5","minimist":"^1.2.5"},"devDependencies":{"@percy/script":"^1.0.2","@zeit/ncc":"^0.20.5"}};
+module.exports = {"name":"exec","version":"0.3.1","description":"A GitHub action to run `percy exec` CLI commands for visual testing","main":"dist/index.js","repository":"https://github.com/percy/exec-action","keywords":["GitHub action","Percy","visual testing"],"author":"Perceptual Inc.","license":"MIT","scripts":{"build":"ncc build src/index.js","percy":"percy exec -- node ./tests/script.js","precommit":"yarn build && git add dist/index.js"},"dependencies":{"@actions/core":"^1.2.6","@actions/exec":"^1.0.3","@actions/github":"^1.1.0","@actions/io":"^1.0.2","@percy/agent":"^0.19.5","minimist":"^1.2.5"},"devDependencies":{"@percy/script":"^1.0.2","@zeit/ncc":"^0.20.5"}};
 
 /***/ }),
 
