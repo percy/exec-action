@@ -24,7 +24,7 @@ jobs:
       - name: Install
         run: yarn
       - name: Percy Test
-        uses: percy/exec-action@v0.1.1
+        uses: percy/exec-action@v0.3.1
         with:
           command: "cypress run"
         env:
