@@ -1,5 +1,7 @@
 # Percy
 
+⚠️ This action is only required if you're using an older SDK not using Percy CLI. In Percy CLI, GitHub actions will work out of the box.
+
 A GitHub action to run `percy exec` CLI commands for visual testing. [Full API docs for this action
 can be found here](https://docs.percy.io/docs/github-actions#section-exec-action)
 
