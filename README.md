@@ -1,6 +1,57 @@
 # Percy
 
+## Deprecated
+
 ⚠️ This action is only required if you're using an older SDK not using Percy CLI. In Percy CLI, GitHub actions will work out of the box.
+
+
+<details><summary>Example for how to migrate</summary>
+<p>
+  
+### Before
+  
+```yml
+name: CI
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Install
+        run: yarn
+      - name: Percy Test
+        uses: percy/exec-action@v0.3.1
+        with:
+          command: "[your-test-command]"
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+```
+
+  
+### After
+
+```yml
+name: CI
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Install
+        run: yarn
+      - name: Percy Test
+        run: npx percy exec -- [your-test-command]
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+```
+</p>
+</details>
+
+_____
 
 A GitHub action to run `percy exec` CLI commands for visual testing. [Full API docs for this action
 can be found here](https://docs.percy.io/docs/github-actions#section-exec-action)
